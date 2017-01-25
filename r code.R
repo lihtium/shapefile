@@ -13,7 +13,7 @@ library(rgdal)
 library(ggplot2)
 library(RColorBrewer)
 
-# The data can be freely downloaded through the luxembourgish opendata website
+# The data can be freely downloaded on the luxembourgish opendata website
 address<-read.csv("./data/addresses.csv",sep=";",dec=".")
 # readOGR reads shapefiles
 communes<-readOGR("./data/LIMADM_COMMUNES.shp",layer="LIMADM_COMMUNES")
