@@ -2,22 +2,29 @@
 # Luxembourg Spatial Analysis
 #=============================
 
-install.packages("sp")
-install.packages("fastshp")
-install.packages("rgdal")
-install.packages("maptools")
-install.packages("RgoogleMaps")
+install.packages("sp",dependencies = TRUE)
+install.packages("fastshp",dependencies = TRUE)
+install.packages("rgdal",dependencies = TRUE)
+install.packages("maptools",dependencies = TRUE)
+install.packages("RgoogleMaps",dependencies = TRUE)
+install.packages("rgeos",dependencies = TRUE)
 
 library(sp)
 library(rgdal)
 library(ggplot2)
+library(rgeos)
 library(RColorBrewer)
 
 # The data can be freely downloaded on the luxembourgish opendata website
-address<-read.csv("./data/addresses.csv",sep=";",dec=".")
+address<-read.csv("./data/addresses.csv",
+                  sep=";",
+                  dec=".",
+                  encoding="UTF-8") # don't forget the encoding as the names are in french
 # readOGR reads shapefiles
-communes<-readOGR("./data/LIMADM_COMMUNES.shp",layer="LIMADM_COMMUNES")
-
+communes<-readOGR("./data/LIMADM_COMMUNES.shp",
+                  layer="LIMADM_COMMUNES",
+                  encoding="UTF-8")
+?readOGR
 # readOGR also reads the projection system
 proj4string(communes)
 # the result should be : "+proj=tmerc +lat_0=49.83333333333334 +lon_0=6.166666666666667 +k=1 +x_0=80000 +y_0=100000 +ellps=intl +units=m +no_defs"
@@ -76,4 +83,20 @@ plot_3<-plot_1+geom_point(data=address,
   coord_equal(ratio=1)
 plot_3
 
+# Work on the spatial data frame 
+head(communes@data)
+head(communes@polygons)
+# A spatial data frame has 5 items
+# data
+communes@data
+# polygons
+plot(communes@polygons[[23]]@plotOrder)
+# plotorder
+communes@plotorder
+# bbox
+communes@bbox
+# proj4string
+communes@bbox
 
+# Get the centroid of a commune
+cent_lnd = gCentroid(communes[communes$COMMUNE == "Luxembourg",]) 
